@@ -1,11 +1,10 @@
+import 'package:app/bloc/blocApi.dart';
 import 'package:app/pages/home/home.dart';
 import 'package:app/routes.dart';
 import 'package:app/themes/theme.dart';
 import 'package:flutter/material.dart';
-
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
   runApp(const MyApp());
 }
 
