@@ -10,6 +10,7 @@ class ItemListPage extends StatefulWidget {
 
 class _ItemListPage extends State<ItemListPage> {
   final List<ListItem> items = List.from(listItem);
+  final listKey = GlobalKey<AnimatedListState>();
 
   @override
   Widget build(BuildContext context) {
@@ -18,17 +19,29 @@ class _ItemListPage extends State<ItemListPage> {
         title: const Text("Item List"),
       ),
       body: AnimatedList(
+        key: listKey,
         initialItemCount: items.length,
         itemBuilder: (context, index, animation) => ListItemWidget(
-            item: items[index], animation: animation, onClicked: () {}),
+            item: items[index],
+            animation: animation,
+            onClicked: () => removeItem(index)),
       ),
     );
+  }
+
+  void removeItem(int index) {
+    final removedItem = items[index];
+    items.removeAt(index);
+    listKey.currentState!.removeItem(
+        index,
+        (context, animation) => ListItemWidget(
+            item: removedItem, animation: animation, onClicked: () {}));
   }
 }
 
 class ListItemWidget extends StatelessWidget {
   final ListItem item;
-  final Animation animation;
+  final Animation<double> animation;
   final VoidCallback? onClicked;
 
   const ListItemWidget(
@@ -39,7 +52,10 @@ class ListItemWidget extends StatelessWidget {
       : super(key: key);
 
   @override
-  Widget build(BuildContext context) => buildItem();
+  Widget build(BuildContext context) => SizeTransition(
+        sizeFactor: animation,
+        child: buildItem(),
+      );
 
   Widget buildItem() => Container(
       margin: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
@@ -54,6 +70,11 @@ class ListItemWidget extends StatelessWidget {
         title: Text(
           item.title,
           style: TextStyle(fontSize: 20, color: Colors.black),
+        ),
+        trailing: IconButton(
+          icon: Icon(Icons.delete),
+          color: Colors.red,
+          onPressed: onClicked,
         ),
         subtitle: Text(item.subTitle),
       ));
