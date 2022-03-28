@@ -7,7 +7,7 @@ class IngredientModel {
   final String unit;
 
   IngredientModel(this.amount, this.name, this.unit);
-  IngredientModel.fromJson(Map<String, dynamic> json)
+  IngredientModel.fromJson(dynamic json)
       : amount = json[ingredient_amount_key],
         name = json[ingredient_name_key],
         unit = json[ingredient_unit_key];

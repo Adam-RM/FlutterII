@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+const String recipes_key = "recipes";
 const String recipe_name_key = "name";
 const String recipe_id_key = "id";
 const String recipe_desc_key = "description";
