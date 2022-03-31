@@ -1,14 +1,17 @@
 import 'dart:async';
 import 'package:app/bloc/api_event.dart';
 import 'package:app/Models/RecipeModel.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert' as convert;
 
-class ApiBloc {
-  String url = "http://localhost:3000/recipes";
-  bool fetch = false;
+import '../Constants/RecipeKey.dart';
 
-  List<RecipeModel> _recipes = new List.empty();
+class ApiBloc extends InheritedWidget {
+  final String url = "http://localhost:3000/recipes";
+  var fetch = false;
+
+  List<RecipeModel> _recipes = List.empty();
 
   final _apiStateController = StreamController<List<RecipeModel>>();
   StreamSink<List<RecipeModel>> get _inApi => _apiStateController.sink;
@@ -19,30 +22,45 @@ class ApiBloc {
   // For events, exposing only a sink which is an input
   Sink<ApiEvent> get apiEventSink => _apiEventController.sink;
 
-  ApiBloc() {
+  ApiBloc({Key? key, required Widget child}) : super(key: key, child: child) {
     // Whenever there is a new event, we want to map it to a new state
     _apiEventController.stream.listen(_mapEventToState);
+    _apiEventController.sink.add(FetchEvent());
   }
 
   void _mapEventToState(ApiEvent event) {
     if (event is FetchEvent) {
       fetchApi();
-    } else if (event is AddEvent) {
+    } else if (event is AddEvent && fetch == true) {
       _recipes.add(event.newItem);
     }
     _inApi.add(_recipes);
   }
 
   void fetchApi() async {
+    print("fetching");
     var _initialResponse = await http.get(url);
-    var jsonText;
+    print("reponse");
     int responseCode = _initialResponse.statusCode;
     if (responseCode == 200) {
-      jsonText = convert.jsonDecode(_initialResponse.body);
+      var jsonText = convert.jsonDecode(_initialResponse.body);
+      print("json decoded");
+      // _recipes.clear();
+      var recipesJson = jsonText as List;
+      print("recipes in list");
 
-      //json convertion
+      // RecipeModel.fromJson(recipesJson[0]);
+      _recipes = (recipesJson.map((i) => RecipeModel.fromJson(i)).toList());
+      // (jsonText[recipes_key] as List).forEach((element) {
+      //   print("New recipe to add");
+      //   _recipes.add(RecipeModel.fromJson(element));
+      //   print("New recipe added");
+      // });
+      print("the recipe is fetch and parsed");
+      _inApi.add(_recipes);
+      fetch = true;
     } else {
-      print('Request failed with status:');
+      print('Request failed');
     }
   }
 
@@ -50,4 +68,7 @@ class ApiBloc {
     _apiStateController.close();
     _apiEventController.close();
   }
+
+  @override
+  bool updateShouldNotify(InheritedWidget oldWidget) => true;
 }
