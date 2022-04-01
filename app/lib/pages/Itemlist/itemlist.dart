@@ -1,4 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:app/pages/detailScreen/detaiScreen.dart';
+
+import '../../Models/RecipeModel.dart';
+import '../../bloc/api_bloc.dart';
+import '../../bloc/api_event.dart';
 
 class ItemListPage extends StatefulWidget {
   const ItemListPage({Key? key}) : super(key: key);
@@ -9,24 +14,36 @@ class ItemListPage extends StatefulWidget {
 }
 
 class _ItemListPage extends State<ItemListPage> {
-  final List<ListItem> items = List.from(listItem);
-  final listKey = GlobalKey<AnimatedListState>();
+  @override
+  void initState() {
+    super.initState();
+    _loadAlbums();
+  }
+
+  _loadAlbums() async {
+    // print("load album 1");
+    // // ApiBloc.of(context)?.apiEventSink.add(FetchEvent());
+    // print("load album 2");
+    // print(ApiBloc.of(context)?.i);
+
+    // context.bloc<AlbumsBloc>().add(AlbumEvents.fetchAlbums);
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Item List"),
-      ),
-      body: AnimatedList(
-        key: listKey,
-        initialItemCount: items.length,
-        itemBuilder: (context, index, animation) => ListItemWidget(
-            item: items[index],
-            animation: animation,
-            onClicked: () => removeItem(index)),
-      ),
-    );
+        appBar: AppBar(
+          title: const Text("Item List"),
+        ),
+        body: AnimatedList(
+          initialItemCount: ApiBloc.of(context)!.getRecipes().length,
+          itemBuilder: (context, index, animation) => ListItemWidget(
+              item: ApiBloc.of(context)!.getRecipes()[index],
+              animation: animation,
+              onClicked: () {Navigator.push(
+          context,MaterialPageRoute(
+            builder: (context) =>  DetailScreen(holder: index)));}),
+        ));
   }
 
   void removeItem(int index) {
@@ -40,8 +57,8 @@ class _ItemListPage extends State<ItemListPage> {
 }
 
 class ListItemWidget extends StatelessWidget {
-  final ListItem item;
-  final Animation<double> animation;
+  final RecipeModel item;
+  final Animation animation;
   final VoidCallback? onClicked;
 
   const ListItemWidget(
@@ -64,11 +81,11 @@ class ListItemWidget extends StatelessWidget {
       child: ListTile(
         contentPadding: EdgeInsets.all(16),
         leading: CircleAvatar(
-          backgroundImage: NetworkImage(item.urlImage),
+          backgroundImage: NetworkImage(item.imageUrl),
           radius: 32,
         ),
         title: Text(
-          item.title,
+          item.name,
           style: TextStyle(fontSize: 20, color: Colors.black),
         ),
         trailing: IconButton(
@@ -80,84 +97,84 @@ class ListItemWidget extends StatelessWidget {
       ));
 }
 
-class ListItem {
-  final String title;
-  final String urlImage;
-  final String subTitle;
+// class ListItem {
+//   final String title;
+//   final String urlImage;
+//   final String subTitle;
 
-  const ListItem(
-      {required this.title, required this.urlImage, required this.subTitle});
-}
+//   const ListItem(
+//       {required this.title, required this.urlImage, required this.subTitle});
+// }
 
-final List<ListItem> listItem = [
-  const ListItem(
-      title: 'Milk',
-      urlImage:
-          'https://upload.wikimedia.org/wikipedia/commons/thumb/2/28/Milk_001.JPG/576px-Milk_001.JPG',
-      subTitle: 'Dessert'),
-  const ListItem(
-      title: 'Djahid',
-      urlImage:
-          'https://m.media-amazon.com/images/I/71o063oFT5L._AC_SX450_.jpg',
-      subTitle: 'Dessert'),
-  const ListItem(
-      title: 'Milk',
-      urlImage:
-          'https://upload.wikimedia.org/wikipedia/commons/thumb/2/28/Milk_001.JPG/576px-Milk_001.JPG',
-      subTitle: 'Dessert'),
-  const ListItem(
-      title: 'Djahid',
-      urlImage:
-          'https://m.media-amazon.com/images/I/71o063oFT5L._AC_SX450_.jpg',
-      subTitle: 'Dessert'),
-  const ListItem(
-      title: 'Milk',
-      urlImage:
-          'https://upload.wikimedia.org/wikipedia/commons/thumb/2/28/Milk_001.JPG/576px-Milk_001.JPG',
-      subTitle: 'Dessert'),
-  const ListItem(
-      title: 'Djahid',
-      urlImage:
-          'https://m.media-amazon.com/images/I/71o063oFT5L._AC_SX450_.jpg',
-      subTitle: 'Dessert'),
-  const ListItem(
-      title: 'Milk',
-      urlImage:
-          'https://upload.wikimedia.org/wikipedia/commons/thumb/2/28/Milk_001.JPG/576px-Milk_001.JPG',
-      subTitle: 'Dessert'),
-  const ListItem(
-      title: 'Djahid',
-      urlImage:
-          'https://m.media-amazon.com/images/I/71o063oFT5L._AC_SX450_.jpg',
-      subTitle: 'Dessert'),
-  const ListItem(
-      title: 'Milk',
-      urlImage:
-          'https://upload.wikimedia.org/wikipedia/commons/thumb/2/28/Milk_001.JPG/576px-Milk_001.JPG',
-      subTitle: 'Dessert'),
-  const ListItem(
-      title: 'Djahid',
-      urlImage:
-          'https://m.media-amazon.com/images/I/71o063oFT5L._AC_SX450_.jpg',
-      subTitle: 'Dessert'),
-  const ListItem(
-      title: 'Milk',
-      urlImage:
-          'https://upload.wikimedia.org/wikipedia/commons/thumb/2/28/Milk_001.JPG/576px-Milk_001.JPG',
-      subTitle: 'Dessert'),
-  const ListItem(
-      title: 'Djahid',
-      urlImage:
-          'https://m.media-amazon.com/images/I/71o063oFT5L._AC_SX450_.jpg',
-      subTitle: 'Dessert'),
-  const ListItem(
-      title: 'Milk',
-      urlImage:
-          'https://upload.wikimedia.org/wikipedia/commons/thumb/2/28/Milk_001.JPG/576px-Milk_001.JPG',
-      subTitle: 'Dessert'),
-  const ListItem(
-      title: 'Djahid',
-      urlImage:
-          'https://m.media-amazon.com/images/I/71o063oFT5L._AC_SX450_.jpg',
-      subTitle: 'Dessert'),
-];
+// final List<ListItem> listItem = [
+//   const ListItem(
+//       title: 'Milk',
+//       urlImage:
+//           'https://upload.wikimedia.org/wikipedia/commons/thumb/2/28/Milk_001.JPG/576px-Milk_001.JPG',
+//       subTitle: 'Dessert'),
+//   const ListItem(
+//       title: 'Djahid',
+//       urlImage:
+//           'https://m.media-amazon.com/images/I/71o063oFT5L._AC_SX450_.jpg',
+//       subTitle: 'Dessert'),
+//   const ListItem(
+//       title: 'Milk',
+//       urlImage:
+//           'https://upload.wikimedia.org/wikipedia/commons/thumb/2/28/Milk_001.JPG/576px-Milk_001.JPG',
+//       subTitle: 'Dessert'),
+//   const ListItem(
+//       title: 'Djahid',
+//       urlImage:
+//           'https://m.media-amazon.com/images/I/71o063oFT5L._AC_SX450_.jpg',
+//       subTitle: 'Dessert'),
+//   const ListItem(
+//       title: 'Milk',
+//       urlImage:
+//           'https://upload.wikimedia.org/wikipedia/commons/thumb/2/28/Milk_001.JPG/576px-Milk_001.JPG',
+//       subTitle: 'Dessert'),
+//   const ListItem(
+//       title: 'Djahid',
+//       urlImage:
+//           'https://m.media-amazon.com/images/I/71o063oFT5L._AC_SX450_.jpg',
+//       subTitle: 'Dessert'),
+//   const ListItem(
+//       title: 'Milk',
+//       urlImage:
+//           'https://upload.wikimedia.org/wikipedia/commons/thumb/2/28/Milk_001.JPG/576px-Milk_001.JPG',
+//       subTitle: 'Dessert'),
+//   const ListItem(
+//       title: 'Djahid',
+//       urlImage:
+//           'https://m.media-amazon.com/images/I/71o063oFT5L._AC_SX450_.jpg',
+//       subTitle: 'Dessert'),
+//   const ListItem(
+//       title: 'Milk',
+//       urlImage:
+//           'https://upload.wikimedia.org/wikipedia/commons/thumb/2/28/Milk_001.JPG/576px-Milk_001.JPG',
+//       subTitle: 'Dessert'),
+//   const ListItem(
+//       title: 'Djahid',
+//       urlImage:
+//           'https://m.media-amazon.com/images/I/71o063oFT5L._AC_SX450_.jpg',
+//       subTitle: 'Dessert'),
+//   const ListItem(
+//       title: 'Milk',
+//       urlImage:
+//           'https://upload.wikimedia.org/wikipedia/commons/thumb/2/28/Milk_001.JPG/576px-Milk_001.JPG',
+//       subTitle: 'Dessert'),
+//   const ListItem(
+//       title: 'Djahid',
+//       urlImage:
+//           'https://m.media-amazon.com/images/I/71o063oFT5L._AC_SX450_.jpg',
+//       subTitle: 'Dessert'),
+//   const ListItem(
+//       title: 'Milk',
+//       urlImage:
+//           'https://upload.wikimedia.org/wikipedia/commons/thumb/2/28/Milk_001.JPG/576px-Milk_001.JPG',
+//       subTitle: 'Dessert'),
+//   const ListItem(
+//       title: 'Djahid',
+//       urlImage:
+//           'https://m.media-amazon.com/images/I/71o063oFT5L._AC_SX450_.jpg',
+//       subTitle: 'Dessert'),
+// ];
