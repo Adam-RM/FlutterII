@@ -12,7 +12,6 @@ class ApiBloc extends InheritedWidget {
   var fetch = false;
 
   List<RecipeModel> _recipes = List.empty();
-  int i;
 
   // final _apiStateController = StreamController<List<RecipeModel>>();
   // StreamSink<List<RecipeModel>> get _inItems => _apiStateController.sink;
@@ -23,9 +22,8 @@ class ApiBloc extends InheritedWidget {
   // For events, exposing only a sink which is an input
   Sink<ApiEvent> get apiEventSink => _apiEventController.sink;
 
-  ApiBloc(this.i, {Key? key, required Widget child})
-      : super(key: key, child: child) {
-    print("contructor");
+  ApiBloc({Key? key, required Widget child}) : super(key: key, child: child) {
+    // print("contructor");
     // Whenever there is a new event, we want to map it to a new state
     _apiEventController.stream.listen(_mapEventToState);
     _apiEventController.sink.add(FetchEvent());
@@ -36,7 +34,7 @@ class ApiBloc extends InheritedWidget {
   }
 
   void _mapEventToState(ApiEvent event) {
-    print("fetching");
+    // print("fetching");
     if (event is FetchEvent) {
       fetchApi();
     } else if (event is AddEvent && fetch == true) {

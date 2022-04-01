@@ -30,8 +30,6 @@ class _ItemListPage extends State<ItemListPage> {
 
   @override
   Widget build(BuildContext context) {
-    print(ApiBloc.of(context)?.i);
-
     return Scaffold(
         appBar: AppBar(
           title: const Text("Item List"),
