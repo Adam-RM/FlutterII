@@ -1,6 +1,7 @@
 import 'package:app/bloc/api_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:app/Models/RecipeModel.dart';
+import 'package:app/pages/Itemlist/itemlist.dart';
 
 class DetailScreen extends StatelessWidget {
   const DetailScreen({Key? key, required this.holder}) : super(key: key);
@@ -53,7 +54,7 @@ class DetailScreen extends StatelessWidget {
               child: GestureDetector(
                 child:
                     const Icon(Icons.arrow_back, color: Colors.black, size: 25),
-               // onTap: () => navigateToMainPage(context),
+                onTap: (){Navigator.pushNamed(context, ItemListPage.routeName);}
               )),
         ],
       )
