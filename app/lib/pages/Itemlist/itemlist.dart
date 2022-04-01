@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:app/pages/detailScreen/detaiScreen.dart';
 
 import '../../Models/RecipeModel.dart';
 import '../../bloc/api_bloc.dart';
@@ -39,7 +40,9 @@ class _ItemListPage extends State<ItemListPage> {
           itemBuilder: (context, index, animation) => ListItemWidget(
               item: ApiBloc.of(context)!.getRecipes()[index],
               animation: animation,
-              onClicked: () {}),
+              onClicked: () {Navigator.push(
+          context,MaterialPageRoute(
+            builder: (context) =>  DetailScreen(holder: index)));}),
         ));
   }
 }

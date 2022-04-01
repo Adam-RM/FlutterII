@@ -1,9 +1,9 @@
+import 'package:app/bloc/blocApi.dart';
 import 'package:flutter/material.dart';
 
 class ItemDetailsPage extends StatelessWidget {
   const ItemDetailsPage ({Key? key}) : super(key: key);
   static String routeName = '/details';
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
