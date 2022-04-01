@@ -9,11 +9,9 @@ class Body extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    ApiBloc apiBloc = new ApiBloc();
-
-    apiBloc.apiEventSink.add(FetchEvent());
-
+    // ApiBloc bloc;
     return SafeArea(
+        // child: ApiBloc(17,
         child: Center(
       child: TextButton(
         child: Text('redirect to Item List screen'),
