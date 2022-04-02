@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 import 'package:app/bloc/api_event.dart';
 import 'package:app/Models/RecipeModel.dart';
 import 'package:flutter/cupertino.dart';
@@ -40,9 +41,26 @@ class ApiBloc extends InheritedWidget {
     } else if (event is AddEvent && fetch == true) {
       _recipes.add(event.newItem);
     }
+
+    if (event is FetchEvent) {
+      try {
+        fetchApi();
+      } on SocketException {
+        // TODO SHOW NO INTERNET PAGE
+        print('no internet');
+      } on FormatException {
+        // TODO SHOW INVALID RESPONSE FORMAT
+        print('Invalid Response format');
+      } on HttpException {
+        // TODO SHOW NO SERVICE FOUND
+        print('No Service Found');
+      }
+    } else if (event is AddEvent && fetch == true) {
+      _recipes.add(event.newItem);
+    }
   }
 
-  void fetchApi() async {
+  Future<Type> fetchApi() async {
     // print("fetching");
     var _initialResponse = await http.get(url);
     // print("reponse");
@@ -64,7 +82,9 @@ class ApiBloc extends InheritedWidget {
       // print("the recipe is fetch and parsed");
       // _inItems.add(_recipes);
       fetch = true;
+      return Future;
     } else {
+      return SocketException;
       print('Request failed');
     }
   }
