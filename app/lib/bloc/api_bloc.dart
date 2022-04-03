@@ -9,7 +9,7 @@ import 'dart:convert' as convert;
 import '../Constants/RecipeKey.dart';
 
 class ApiBloc extends InheritedWidget {
-  final String url = "http://localhost:3000/recipes";
+  final String url = "http://192.168.0.18:3000/recipes";
   var fetch = false;
 
   List<RecipeModel> _recipes = List.empty();
@@ -24,7 +24,7 @@ class ApiBloc extends InheritedWidget {
   Sink<ApiEvent> get apiEventSink => _apiEventController.sink;
 
   ApiBloc({Key? key, required Widget child}) : super(key: key, child: child) {
-    // print("contructor");
+    print("contructor");
     // Whenever there is a new event, we want to map it to a new state
     _apiEventController.stream.listen(_mapEventToState);
     _apiEventController.sink.add(FetchEvent());
@@ -35,23 +35,23 @@ class ApiBloc extends InheritedWidget {
   }
 
   void _mapEventToState(ApiEvent event) {
-    // print("fetching");
-    if (event is FetchEvent) {
-      fetchApi();
-    } else if (event is AddEvent && fetch == true) {
-      _recipes.add(event.newItem);
-    }
+    //print("fetching 1");
+    // if (event is FetchEvent) {
+    //  fetchApi();
+    // } else if (event is AddEvent && fetch == true) {
+    //   _recipes.add(event.newItem);
+    // }
 
     if (event is FetchEvent) {
       try {
         fetchApi();
-      } on SocketException {
+      } on SocketException  catch (_) {
         // TODO SHOW NO INTERNET PAGE
         print('no internet');
-      } on FormatException {
+      } on FormatException catch (_) {
         // TODO SHOW INVALID RESPONSE FORMAT
         print('Invalid Response format');
-      } on HttpException {
+      } on HttpException catch (_) {
         // TODO SHOW NO SERVICE FOUND
         print('No Service Found');
       }
@@ -61,18 +61,20 @@ class ApiBloc extends InheritedWidget {
   }
 
   Future<Type> fetchApi() async {
-    // print("fetching");
+    print("fetching 2");
     var _initialResponse = await http.get(url);
-    // print("reponse");
+    print("reponse");
     int responseCode = _initialResponse.statusCode;
     if (responseCode == 200) {
-      var jsonText = convert.jsonDecode(_initialResponse.body);
-      // print("json decoded");
-      // _recipes.clear();
-      var recipesJson = jsonText as List;
-      // print("recipes in list");
 
-      // RecipeModel.fromJson(recipesJson[0]);
+      print('Request done');
+      var jsonText = convert.jsonDecode(_initialResponse.body);
+      if (!_recipes.isEmpty)
+        _recipes.clear();
+      var recipesJson = jsonText as List;
+      print("recipes in list");
+
+      RecipeModel.fromJson(recipesJson[0]);
       _recipes = (recipesJson.map((i) => RecipeModel.fromJson(i)).toList());
       // (jsonText[recipes_key] as List).forEach((element) {
       //   print("New recipe to add");
@@ -84,8 +86,8 @@ class ApiBloc extends InheritedWidget {
       fetch = true;
       return Future;
     } else {
-      return SocketException;
       print('Request failed');
+      return SocketException;
     }
   }
 

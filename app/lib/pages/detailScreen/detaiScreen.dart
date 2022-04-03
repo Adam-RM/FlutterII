@@ -151,12 +151,7 @@ class DetailRecipes extends StatelessWidget {
                               itemCount: recipe.ingredients.length,
                               itemBuilder: (context, index) {
                                 var ingredients = recipe.ingredients;
-                                return Text(ingredients[index].amount != null
-                                    ? ingredients[index].amount +
-                                        (ingredients[index].unit ?? "") +
-                                        " " +
-                                        ingredients[index].name
-                                    : "");
+                                return Text(ingredients[index].amount != null ? ingredients[index].amount ?? "" + (ingredients[index].unit) + " " + ingredients[index].name : "");
                               },
                             )
                           ],

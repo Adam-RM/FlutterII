@@ -1,4 +1,3 @@
-import 'package:app/bloc/blocApi.dart';
 import 'package:flutter/material.dart';
 
 class ItemDetailsPage extends StatelessWidget {
