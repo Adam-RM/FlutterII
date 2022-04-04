@@ -9,7 +9,8 @@ import 'dart:convert' as convert;
 import '../Constants/RecipeKey.dart';
 
 class ApiBloc extends InheritedWidget {
-  final String url = "http://localhost:3000/recipes";
+  final String url = "http://192.168.0.18:3000/recipes";
+  //final String url = "http://localhost:3000/recipes"; //web
   var fetch = false;
 
   List<RecipeModel> recipes = List.empty();
@@ -58,8 +59,8 @@ class ApiBloc extends InheritedWidget {
 
   Future<Type> fetchApi() async {
     print("ping google");
-    // var ping = await InternetAddress.lookup("www.google.com");
-    // if (ping.isNotEmpty) _connectivity = 1;
+    var ping = await InternetAddress.lookup("www.google.com");
+    if (ping.isNotEmpty) _connectivity = 1;
     print("code:");
     print(_connectivity);
 
