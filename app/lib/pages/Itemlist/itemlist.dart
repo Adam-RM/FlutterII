@@ -14,6 +14,10 @@ class ItemListPage extends StatefulWidget {
 }
 
 class _ItemListPage extends State<ItemListPage> {
+  final nameController = TextEditingController();
+  final descController = TextEditingController();
+  final imageController = TextEditingController();
+
   @override
   void initState() {
     super.initState();
@@ -66,14 +70,17 @@ class _ItemListPage extends State<ItemListPage> {
       builder: (context) => AlertDialog(
             title: const Text('New recipe'),
             content: Column(
-              children: const [
+              children: [
                 TextField(
+                  controller: nameController,
                   decoration: InputDecoration(hintText: 'Name'),
                 ),
                 TextField(
+                  controller: imageController,
                   decoration: InputDecoration(hintText: 'Image Url'),
                 ),
                 TextField(
+                  controller: descController,
                   decoration: InputDecoration(hintText: 'Description'),
                 )
               ],
@@ -81,14 +88,17 @@ class _ItemListPage extends State<ItemListPage> {
             actions: [
               TextButton(
                   onPressed: () {
-                    submit();
+                    submit(nameController.text, descController.text,
+                        imageController.text);
                   },
                   child: Text('Create')),
             ],
           ));
 
-  void submit() {
-    // TODO CREQTE RECIPE
+  void submit(name, desc, imageUrl) {
+    ApiBloc.of(context)!
+        .apiEventSink
+        .add(AddEvent(RecipeModel(name: name, desc: desc, imageUrl: imageUrl)));
     Navigator.of(context).pop();
   }
 

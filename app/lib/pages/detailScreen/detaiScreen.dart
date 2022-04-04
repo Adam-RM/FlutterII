@@ -124,7 +124,7 @@ class DetailRecipes extends StatelessWidget {
                                         "Ingredients",
                                       ),
                                       Text(
-                                        recipe.ingredients.length.toString(),
+                                        recipe.ingredients!.length.toString(),
                                       ),
                                     ],
                                   ),
@@ -148,10 +148,15 @@ class DetailRecipes extends StatelessWidget {
                               padding: EdgeInsets.only(top: 10),
                               shrinkWrap: true,
                               physics: const ClampingScrollPhysics(),
-                              itemCount: recipe.ingredients.length,
+                              itemCount: recipe.ingredients!.length,
                               itemBuilder: (context, index) {
                                 var ingredients = recipe.ingredients;
-                                return Text(ingredients[index].amount != null ? ingredients[index].amount ?? "" + (ingredients[index].unit) + " " + ingredients[index].name : "");
+                                return Text(ingredients![index].amount != null
+                                    ? ingredients[index].amount +
+                                        (ingredients[index].unit ?? "") +
+                                        " " +
+                                        ingredients[index].name
+                                    : "");
                               },
                             )
                           ],
@@ -169,9 +174,9 @@ class DetailRecipes extends StatelessWidget {
                               shrinkWrap: true,
                               physics: const ClampingScrollPhysics(),
                               padding: EdgeInsets.only(top: 10),
-                              itemCount: recipe.steps.length,
+                              itemCount: recipe.steps!.length,
                               itemBuilder: (context, index) {
-                                return Text(recipe.steps[index]);
+                                return Text(recipe.steps![index]);
                               },
                             )
                           ],
