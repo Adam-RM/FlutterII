@@ -13,6 +13,7 @@ class ApiBloc extends InheritedWidget {
   var fetch = false;
 
   List<RecipeModel> _recipes = List.empty();
+  int _connectivity = 0;
 
   // final _apiStateController = StreamController<List<RecipeModel>>();
   // StreamSink<List<RecipeModel>> get _inItems => _apiStateController.sink;
@@ -32,6 +33,11 @@ class ApiBloc extends InheritedWidget {
 
   List<RecipeModel> getRecipes() {
     return (_recipes);
+  }
+
+  int getConnectivity() {
+    print (_connectivity);
+    return (_connectivity);
   }
 
   void _mapEventToState(ApiEvent event) {
@@ -65,8 +71,14 @@ class ApiBloc extends InheritedWidget {
     var _initialResponse = await http.get(url);
     print("reponse");
     int responseCode = _initialResponse.statusCode;
-    if (responseCode == 200) {
 
+    var ping = await InternetAddress.lookup("www.google.com");
+    if (ping.isNotEmpty)
+      _connectivity = 200;
+
+    print ("code:");
+    print (_connectivity);
+    if (responseCode == 200) {
       print('Request done');
       var jsonText = convert.jsonDecode(_initialResponse.body);
       if (!_recipes.isEmpty)
@@ -84,9 +96,14 @@ class ApiBloc extends InheritedWidget {
       // print("the recipe is fetch and parsed");
       // _inItems.add(_recipes);
       fetch = true;
+
+
+
       return Future;
     } else {
+
       print('Request failed');
+      _connectivity = responseCode;
       return SocketException;
     }
   }
