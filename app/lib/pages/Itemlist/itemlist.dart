@@ -40,12 +40,12 @@ class _ItemListPage extends State<ItemListPage> {
           title: const Text("Item List"),
         ),
         body: AnimatedList(
-          initialItemCount: ApiBloc.of(context)!.getRecipes().length,
+          initialItemCount: ApiBloc.of(context)!.recipes.length,
           itemBuilder: (context, index, animation) => ListItemWidget(
-              item: ApiBloc.of(context)!.getRecipes()[index],
+              item: ApiBloc.of(context)!.recipes[index],
               animation: animation,
               delete: () {
-                // todo remove item
+                removeItem(index);
               },
               onClicked: () {
                 Navigator.push(
@@ -53,7 +53,7 @@ class _ItemListPage extends State<ItemListPage> {
                     MaterialPageRoute(
                         // builder: (context) => DetailScreen(holder: index)));
                         builder: (context) => DetailRecipes(
-                              recipe: ApiBloc.of(context)!.getRecipes()[index],
+                              recipe: ApiBloc.of(context)!.recipes[index],
                             )));
               }),
         ),
@@ -103,13 +103,7 @@ class _ItemListPage extends State<ItemListPage> {
   }
 
   void removeItem(int index) {
-    // TODO REMOVE RECIPE
-    // final removedItem = items[index];
-    // items.removeAt(index);
-    // listKey.currentState!.removeItem(
-    //     index,
-    //     (context, animation) => ListItemWidget(
-    //         item: removedItem, animation: animation, onClicked: () {}));
+    ApiBloc.of(context)!.apiEventSink.add(RemoveEvent(index));
   }
 }
 

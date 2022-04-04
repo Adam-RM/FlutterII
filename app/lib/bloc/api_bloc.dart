@@ -9,16 +9,11 @@ import 'dart:convert' as convert;
 import '../Constants/RecipeKey.dart';
 
 class ApiBloc extends InheritedWidget {
-  final String url = "http://192.168.0.18:3000/recipes";
+  final String url = "http://localhost:3000/recipes";
   var fetch = false;
 
-  List<RecipeModel> _recipes = List.empty();
+  List<RecipeModel> recipes = List.empty();
   int _connectivity = 0;
-
-  // final _apiStateController = StreamController<List<RecipeModel>>();
-  // StreamSink<List<RecipeModel>> get _inItems => _apiStateController.sink;
-  // // For state, exposing only a stream which outputs data
-  // Stream<List<RecipeModel>> get items => _apiStateController.stream;
 
   final _apiEventController = StreamController<ApiEvent>();
   // For events, exposing only a sink which is an input
@@ -31,27 +26,20 @@ class ApiBloc extends InheritedWidget {
     _apiEventController.sink.add(FetchEvent());
   }
 
-  List<RecipeModel> getRecipes() {
-    return (_recipes);
-  }
+  // List<RecipeModel> getRecipes() {
+  //   return (recipes);
+  // }
 
   int getConnectivity() {
-    print (_connectivity);
+    print(_connectivity);
     return (_connectivity);
   }
 
   void _mapEventToState(ApiEvent event) {
-    //print("fetching 1");
-    // if (event is FetchEvent) {
-    //  fetchApi();
-    // } else if (event is AddEvent && fetch == true) {
-    //   _recipes.add(event.newItem);
-    // }
-
     if (event is FetchEvent) {
       try {
         fetchApi();
-      } on SocketException  catch (_) {
+      } on SocketException catch (_) {
         // TODO SHOW NO INTERNET PAGE
         print('no internet');
       } on FormatException catch (_) {
@@ -62,17 +50,18 @@ class ApiBloc extends InheritedWidget {
         print('No Service Found');
       }
     } else if (event is AddEvent && fetch == true) {
-      _recipes.add(event.newItem);
+      recipes.add(event.newItem);
+    } else if (event is RemoveEvent && fetch == true) {
+      recipes.removeAt(event.index);
     }
   }
 
   Future<Type> fetchApi() async {
-
     print("ping google");
-    var ping = await InternetAddress.lookup("www.google.com");
-    if (ping.isNotEmpty)
-      _connectivity = 1;
-    print ("code:"); print (_connectivity);
+    // var ping = await InternetAddress.lookup("www.google.com");
+    // if (ping.isNotEmpty) _connectivity = 1;
+    print("code:");
+    print(_connectivity);
 
     print("fetch data");
     var _initialResponse = await http.get(url);
@@ -81,27 +70,16 @@ class ApiBloc extends InheritedWidget {
     print(responseCode);
     if (responseCode == 200) {
       var jsonText = convert.jsonDecode(_initialResponse.body);
-      if (!_recipes.isEmpty)
-        _recipes.clear();
+      if (!recipes.isEmpty) recipes.clear();
       var recipesJson = jsonText as List;
       print("recipes in list");
 
       RecipeModel.fromJson(recipesJson[0]);
-      _recipes = (recipesJson.map((i) => RecipeModel.fromJson(i)).toList());
-      // (jsonText[recipes_key] as List).forEach((element) {
-      //   print("New recipe to add");
-      //   _recipes.add(RecipeModel.fromJson(element));
-      //   print("New recipe added");
-      // });
-      // print("the recipe is fetch and parsed");
-      // _inItems.add(_recipes);
+      recipes = (recipesJson.map((i) => RecipeModel.fromJson(i)).toList());
       fetch = true;
-
-
 
       return Future;
     } else {
-
       print('Request failed');
       _connectivity = responseCode;
       return SocketException;
@@ -109,7 +87,6 @@ class ApiBloc extends InheritedWidget {
   }
 
   void dispose() {
-    // _apiStateController.close();
     _apiEventController.close();
   }
 

@@ -9,3 +9,9 @@ class AddEvent extends ApiEvent {
 
   AddEvent(this.newItem);
 }
+
+class RemoveEvent extends ApiEvent {
+  int index;
+
+  RemoveEvent(this.index);
+}
