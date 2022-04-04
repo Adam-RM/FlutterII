@@ -4,13 +4,14 @@ import 'package:app/pages/Itemlist/itemlist.dart';
 import 'package:app/pages/detailScreen/detaiScreen.dart';
 import 'package:flutter/material.dart';
 import '../../itemdetails/itemdetails.dart';
+import '../../noconnection/badapi.dart';
+import '../../noconnection/noapi.dart';
 import '../../noconnection/noconnection.dart';
 
 class Body extends StatelessWidget {
   const Body({
     Key? key,
   }) : super(key: key);
-
 
 
   @override
@@ -32,15 +33,19 @@ class Body extends StatelessWidget {
 }
 
 Future<Object?> redirectConnectivity (context) {
+  print(ApiBloc.of(context)!.getConnectivity());
   if (ApiBloc.of(context)!.getConnectivity() == 200) {
-    print(ApiBloc.of(context)!.getConnectivity());
-    print ("hello");
     return (Navigator.pushNamed(context, ItemListPage.routeName));
+  }
+  if (ApiBloc.of(context)!.getConnectivity() == 1) {
+    return (Navigator.pushNamed(context, NoApiPage.routeName));
+  }
+  if (ApiBloc.of(context)!.getConnectivity() == 0) {
+    return (Navigator.pushNamed(context, NoConnectionPage.routeName));
   }
 
   print(ApiBloc.of(context)!.getConnectivity());
-  print ("hello2");
-  return (Navigator.pushNamed(context, NoConnectionPage.routeName));
+  return (Navigator.pushNamed(context, ApiAvailablePage.routeName));
 }
 
 

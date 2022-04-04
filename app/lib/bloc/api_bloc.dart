@@ -67,19 +67,19 @@ class ApiBloc extends InheritedWidget {
   }
 
   Future<Type> fetchApi() async {
-    print("fetching 2");
-    var _initialResponse = await http.get(url);
-    print("reponse");
-    int responseCode = _initialResponse.statusCode;
 
+    print("ping google");
     var ping = await InternetAddress.lookup("www.google.com");
     if (ping.isNotEmpty)
-      _connectivity = 200;
+      _connectivity = 1;
+    print ("code:"); print (_connectivity);
 
-    print ("code:");
-    print (_connectivity);
+    print("fetch data");
+    var _initialResponse = await http.get(url);
+    int responseCode = _initialResponse.statusCode;
+    _connectivity = responseCode;
+    print(responseCode);
     if (responseCode == 200) {
-      print('Request done');
       var jsonText = convert.jsonDecode(_initialResponse.body);
       if (!_recipes.isEmpty)
         _recipes.clear();

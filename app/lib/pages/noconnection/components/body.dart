@@ -10,12 +10,8 @@ class Body extends StatelessWidget {
     Key? key,
   }) : super(key: key);
 
-
-
   @override
   Widget build(BuildContext context) {
-    //ApiBloc apiBloc = new ApiBloc();
-
     return SafeArea(
         child: Center (
             child: Column(
